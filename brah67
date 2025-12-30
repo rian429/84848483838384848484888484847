@@ -1,0 +1,1476 @@
+-- CYBER BADGE — CREATOR MODE
+-- Callsign diganti -> CREATOR
+-- By ZENXYYV
+-- Updated: Part Count Setting + Reset Feature + Node CYBER-08
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+-- Hapus GUI lama jika ada
+if PlayerGui:FindFirstChild("CyberBadgeV3") then
+    PlayerGui.CyberBadgeV3:Destroy()
+end
+
+if PlayerGui:FindFirstChild("LagSwitchUI") then
+    PlayerGui.LagSwitchUI:Destroy()
+end
+
+-- ==================== CYBER BADGE UI DENGAN NODE CYBER-08 ====================
+
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "CyberBadgeV3"
+Gui.ResetOnSpawn = false
+Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Gui.Parent = PlayerGui
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 260, 0, 150)
+Frame.Position = UDim2.new(0.5, -130, 0.5, -75)
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BackgroundTransparency = 0.3
+Frame.BorderSizePixel = 0
+Frame.ZIndex = 100
+Frame.Parent = Gui
+
+local Stroke = Instance.new("UIStroke")
+Stroke.Color = Color3.fromRGB(150, 50, 255)
+Stroke.Thickness = 5
+Stroke.Transparency = 0.9
+Stroke.Parent = Frame
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -20, 0, 22)
+Title.Position = UDim2.new(0, 10, 0, 8)
+Title.BackgroundTransparency = 1
+Title.Text = "CYBER ACCESS"
+Title.Font = Enum.Font.SciFi
+Title.TextSize = 18
+Title.TextColor3 = Color3.fromRGB(200, 150, 255)
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Frame
+
+local Info = Instance.new("TextLabel")
+Info.Size = UDim2.new(1, -20, 0, 66)
+Info.Position = UDim2.new(0, 10, 0, 38)
+Info.BackgroundTransparency = 1
+Info.TextXAlignment = Enum.TextXAlignment.Left
+Info.TextYAlignment = Enum.TextYAlignment.Top
+Info.Font = Enum.Font.Code
+Info.TextSize = 14
+Info.TextColor3 = Color3.fromRGB(180, 240, 255)
+Info.Text = "CREATOR   ZENXYYV\nNODE      CYBER-08\nACCESS    AUTHORIZED"  -- Diubah ke CYBER-08
+Info.Parent = Frame
+
+local Button = Instance.new("TextButton")
+Button.Size = UDim2.new(1, -20, 0, 30)
+Button.Position = UDim2.new(0, 10, 1, -40)
+Button.BackgroundColor3 = Color3.fromRGB(40, 0, 60)
+Button.BackgroundTransparency = 0.2
+Button.Text = "ENTER SYSTEM"
+Button.Font = Enum.Font.GothamBold
+Button.TextSize = 14
+Button.TextColor3 = Color3.fromRGB(200, 150, 255)
+Button.AutoButtonColor = false
+Button.Parent = Frame
+
+local ButtonStroke = Instance.new("UIStroke")
+ButtonStroke.Color = Color3.fromRGB(150, 50, 255)
+ButtonStroke.Thickness = 1.5
+ButtonStroke.Transparency = 0
+ButtonStroke.Parent = Button
+
+Button.MouseEnter:Connect(function()
+    Button.BackgroundColor3 = Color3.fromRGB(80, 0, 120)
+    Button.TextColor3 = Color3.fromRGB(220, 180, 255)
+end)
+
+Button.MouseLeave:Connect(function()
+    Button.BackgroundColor3 = Color3.fromRGB(40, 0, 60)
+    Button.TextColor3 = Color3.fromRGB(200, 150, 255)
+end)
+
+-- ==================== LAG SWITCH UI DENGAN FITUR BARU ====================
+
+local function createLagSwitchUI()
+    -- Configuration dengan nilai default
+    local DefaultFreezeDuration = 0.4
+    local DefaultUIWidth = 200
+    local DefaultUIHeight = 90
+    local DefaultPartCount = 50
+    local DefaultPerformanceMode = "HIGH"
+    local DefaultDragEnabled = true
+    
+    -- Current values
+    local FreezeDuration = DefaultFreezeDuration
+    local Cooldown = 0.2
+    local LastFreezeTime = 0
+    local IsFreezing = false
+    local SettingsOpen = false
+    local DragEnabled = DefaultDragEnabled
+    local PartCount = DefaultPartCount
+    local PerformanceMode = DefaultPerformanceMode
+    local UIWidth = DefaultUIWidth
+    local UIHeight = DefaultUIHeight
+    
+    print("🔄 Creating Lag Switch UI with New Features...")
+
+    -- Create CYBER ICE THEME GUI
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "LagSwitchUI"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Parent = PlayerGui
+
+    -- Main Cyber Ice Container
+    local IceButton = Instance.new("Frame")
+    IceButton.Name = "IceButton"
+    IceButton.Size = UDim2.new(0, UIWidth, 0, UIHeight)
+    IceButton.Position = UDim2.new(0, 10, 0, 120)
+    IceButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    IceButton.BackgroundTransparency = 0.4
+    IceButton.BorderSizePixel = 0
+    IceButton.Active = true
+    IceButton.Visible = true
+    IceButton.Parent = ScreenGui
+
+    -- SMOOTH PURPLE FLOW BORDER
+    local FlowBorder = Instance.new("UIStroke")
+    FlowBorder.Name = "FlowBorder"
+    FlowBorder.Color = Color3.fromRGB(150, 50, 255)
+    FlowBorder.Thickness = 5
+    FlowBorder.Transparency = 0.9
+    FlowBorder.Parent = IceButton
+
+    -- Settings Button "X"
+    local SettingsButton = Instance.new("TextButton")
+    SettingsButton.Name = "SettingsButton"
+    SettingsButton.Size = UDim2.new(0, 30, 0, 30)
+    SettingsButton.Position = UDim2.new(1, -35, 0, 5)
+    SettingsButton.BackgroundColor3 = Color3.fromRGB(40, 0, 80)
+    SettingsButton.BackgroundTransparency = 0.3
+    SettingsButton.Text = "X"
+    SettingsButton.TextColor3 = Color3.fromRGB(200, 150, 255)
+    SettingsButton.TextSize = 14
+    SettingsButton.Font = Enum.Font.GothamBold
+    SettingsButton.BorderSizePixel = 0
+    SettingsButton.ZIndex = 10
+    SettingsButton.Parent = IceButton
+
+    local SettingsButtonStroke = Instance.new("UIStroke")
+    SettingsButtonStroke.Color = Color3.fromRGB(180, 100, 255)
+    SettingsButtonStroke.Thickness = 2
+    SettingsButtonStroke.Transparency = 0.5
+    SettingsButtonStroke.Parent = SettingsButton
+
+    -- Cyber Style Button Text "FREZEE"
+    local ButtonText = Instance.new("TextLabel")
+    ButtonText.Size = UDim2.new(1, 0, 1, 0)
+    ButtonText.Position = UDim2.new(0, 0, 0, 0)
+    ButtonText.Text = ""
+    ButtonText.Font = Enum.Font.SciFi
+    ButtonText.TextSize = 22
+    ButtonText.TextColor3 = Color3.fromRGB(200, 150, 255)
+    ButtonText.BackgroundTransparency = 1
+    ButtonText.TextStrokeTransparency = 0.2
+    ButtonText.TextStrokeColor3 = Color3.fromRGB(30, 0, 50)
+    ButtonText.ZIndex = 4
+    ButtonText.TextWrapped = true
+    ButtonText.TextYAlignment = Enum.TextYAlignment.Center
+    ButtonText.Parent = IceButton
+
+    -- Status Text
+    local StatusText = Instance.new("TextLabel")
+    StatusText.Name = "StatusText"
+    StatusText.Size = UDim2.new(1, 0, 0, 15)
+    StatusText.Position = UDim2.new(0, 0, 0.8, 0)
+    StatusText.Text = ""
+    StatusText.Font = Enum.Font.Code
+    StatusText.TextSize = 10
+    StatusText.TextColor3 = Color3.fromRGB(180, 100, 255)
+    StatusText.BackgroundTransparency = 1
+    StatusText.TextStrokeTransparency = 0.5
+    StatusText.ZIndex = 4
+    StatusText.Parent = IceButton
+
+    -- Click Detector
+    local ClickDetector = Instance.new("TextButton")
+    ClickDetector.Size = UDim2.new(1, 0, 1, 0)
+    ClickDetector.Position = UDim2.new(0, 0, 0, 0)
+    ClickDetector.BackgroundTransparency = 1
+    ClickDetector.Text = ""
+    ClickDetector.ZIndex = 5
+    ClickDetector.Parent = IceButton
+
+    -- ==================== SMOOTH PURPLE BORDER ANIMATION ====================
+    
+    local flowAngle = 90
+    local flowSpeed = 132
+    local animationConnection
+    local borderAnimationPaused = false
+    
+    local function getBorderColor(angle)
+        angle = angle % 360
+        
+        local transparency
+        
+        if angle <= 36 then
+            transparency = 0.9 - (angle/36 * 0.9)
+        elseif angle <= 54 then
+            transparency = 0
+        elseif angle <= 90 then
+            transparency = (angle - 54) / 36 * 0.9
+        else
+            transparency = 0.9
+        end
+        
+        local patternAngle = angle % 90
+        if patternAngle <= 36 then
+            transparency = 0.9 - (patternAngle/36 * 0.9)
+        elseif patternAngle <= 54 then
+            transparency = 0
+        elseif patternAngle <= 90 then
+            transparency = (patternAngle - 54) / 36 * 0.9
+        end
+        
+        return Color3.fromRGB(150, 50, 255), transparency
+    end
+    
+    local function startSmoothBorderAnimation()
+        if animationConnection then
+            animationConnection:Disconnect()
+        end
+        
+        if PerformanceMode ~= "HIGH" or borderAnimationPaused then
+            return
+        end
+        
+        animationConnection = RunService.RenderStepped:Connect(function(deltaTime)
+            if not IceButton or not IceButton.Parent then
+                return
+            end
+            
+            flowAngle = (flowAngle + (flowSpeed * deltaTime)) % 360
+            
+            local color, transparency = getBorderColor(flowAngle)
+            
+            FlowBorder.Color = color
+            FlowBorder.Transparency = transparency
+            FlowBorder.Thickness = 4 + math.sin(flowAngle * math.pi / 180) * 1.5
+            
+            StatusText.TextColor3 = Color3.fromRGB(
+                math.clamp(color.R * 255, 100, 255),
+                math.clamp(color.G * 255, 50, 200),
+                math.clamp(color.B * 255, 200, 255)
+            )
+        end)
+    end
+    
+    local function stopBorderAnimation()
+        if animationConnection then
+            animationConnection:Disconnect()
+            animationConnection = nil
+        end
+        
+        FlowBorder.Color = Color3.fromRGB(150, 50, 255)
+        FlowBorder.Transparency = 0.9
+        FlowBorder.Thickness = 5
+        StatusText.TextColor3 = Color3.fromRGB(180, 100, 255)
+    end
+
+    -- ==================== SETTINGS PANEL DENGAN FITUR BARU ====================
+
+    local SettingsPanel = Instance.new("Frame")
+    SettingsPanel.Name = "SettingsPanel"
+    SettingsPanel.Size = UDim2.new(0, 300, 0, 450) -- Diperbesar untuk fitur tambahan
+    SettingsPanel.Position = UDim2.new(1, 320, 0, 0) -- Start off-screen
+    SettingsPanel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    SettingsPanel.BackgroundTransparency = 0.4
+    SettingsPanel.BorderSizePixel = 0
+    SettingsPanel.Visible = false
+    SettingsPanel.ZIndex = 20
+    SettingsPanel.Parent = IceButton
+
+    local SettingsPanelBorder = Instance.new("UIStroke")
+    SettingsPanelBorder.Color = Color3.fromRGB(150, 50, 255)
+    SettingsPanelBorder.Thickness = 3
+    SettingsPanelBorder.Transparency = 0.7
+    SettingsPanelBorder.Parent = SettingsPanel
+
+    -- Header untuk drag panel
+    local SettingsHeader = Instance.new("Frame")
+    SettingsHeader.Name = "SettingsHeader"
+    SettingsHeader.Size = UDim2.new(1, 0, 0, 30)
+    SettingsHeader.Position = UDim2.new(0, 0, 0, 0)
+    SettingsHeader.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+    SettingsHeader.BackgroundTransparency = 0.3
+    SettingsHeader.BorderSizePixel = 0
+    SettingsHeader.ZIndex = 21
+    SettingsHeader.Active = true
+    SettingsHeader.Parent = SettingsPanel
+
+    local SettingsTitle = Instance.new("TextLabel")
+    SettingsTitle.Size = UDim2.new(1, 0, 1, 0)
+    SettingsTitle.Position = UDim2.new(0, 0, 0, 0)
+    SettingsTitle.Text = "⚙ SETTINGS (Drag ↑↓)"
+    SettingsTitle.Font = Enum.Font.SciFi
+    SettingsTitle.TextSize = 16
+    SettingsTitle.TextColor3 = Color3.fromRGB(200, 150, 255)
+    SettingsTitle.BackgroundTransparency = 1
+    SettingsTitle.TextStrokeTransparency = 0.3
+    SettingsTitle.ZIndex = 22
+    SettingsTitle.Parent = SettingsHeader
+
+    -- ScrollingFrame untuk konten settings
+    local SettingsScroll = Instance.new("ScrollingFrame")
+    SettingsScroll.Name = "SettingsScroll"
+    SettingsScroll.Size = UDim2.new(1, 0, 1, -30)
+    SettingsScroll.Position = UDim2.new(0, 0, 0, 30)
+    SettingsScroll.BackgroundTransparency = 1
+    SettingsScroll.BorderSizePixel = 0
+    SettingsScroll.ScrollBarThickness = 6
+    SettingsScroll.ScrollBarImageColor3 = Color3.fromRGB(150, 50, 255)
+    SettingsScroll.ScrollBarImageTransparency = 0.7
+    SettingsScroll.ZIndex = 21
+    SettingsScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    SettingsScroll.Parent = SettingsPanel
+
+    -- Container untuk semua settings
+    local SettingsContent = Instance.new("Frame")
+    SettingsContent.Name = "SettingsContent"
+    SettingsContent.Size = UDim2.new(1, 0, 0, 430)
+    SettingsContent.BackgroundTransparency = 1
+    SettingsContent.ZIndex = 21
+    SettingsContent.Parent = SettingsScroll
+
+    -- ==================== DURATION SETTING ====================
+    local DurationSection = Instance.new("Frame")
+    DurationSection.Name = "DurationSection"
+    DurationSection.Size = UDim2.new(1, -20, 0, 60)
+    DurationSection.Position = UDim2.new(0, 10, 0, 10)
+    DurationSection.BackgroundTransparency = 1
+    DurationSection.ZIndex = 21
+    DurationSection.Parent = SettingsContent
+
+    local DurationLabel = Instance.new("TextLabel")
+    DurationLabel.Size = UDim2.new(1, 0, 0, 20)
+    DurationLabel.Position = UDim2.new(0, 0, 0, 0)
+    DurationLabel.Text = "FREEZE DURATION (0.1-2.0s):"
+    DurationLabel.Font = Enum.Font.Code
+    DurationLabel.TextSize = 12
+    DurationLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    DurationLabel.BackgroundTransparency = 1
+    DurationLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DurationLabel.ZIndex = 22
+    DurationLabel.Parent = DurationSection
+
+    -- Frame untuk input dan unit
+    local DurationInputFrame = Instance.new("Frame")
+    DurationInputFrame.Size = UDim2.new(1, 0, 0, 25)
+    DurationInputFrame.Position = UDim2.new(0, 0, 0, 25)
+    DurationInputFrame.BackgroundTransparency = 1
+    DurationInputFrame.ZIndex = 22
+    DurationInputFrame.Parent = DurationSection
+
+    -- TextBox untuk input nilai
+    local DurationTextBox = Instance.new("TextBox")
+    DurationTextBox.Name = "DurationTextBox"
+    DurationTextBox.Size = UDim2.new(0.7, -5, 1, 0)
+    DurationTextBox.Position = UDim2.new(0, 0, 0, 0)
+    DurationTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+    DurationTextBox.BackgroundTransparency = 0.3
+    DurationTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    DurationTextBox.Text = string.format("%.1f", FreezeDuration)
+    DurationTextBox.Font = Enum.Font.Code
+    DurationTextBox.TextSize = 12
+    DurationTextBox.PlaceholderText = "Enter seconds..."
+    DurationTextBox.ZIndex = 23
+    DurationTextBox.Parent = DurationInputFrame
+
+    local DurationTextBoxBorder = Instance.new("UIStroke")
+    DurationTextBoxBorder.Color = Color3.fromRGB(150, 50, 255)
+    DurationTextBoxBorder.Thickness = 1
+    DurationTextBoxBorder.Transparency = 0.5
+    DurationTextBoxBorder.Parent = DurationTextBox
+
+    -- Label untuk unit
+    local DurationUnitLabel = Instance.new("TextLabel")
+    DurationUnitLabel.Size = UDim2.new(0.3, -5, 1, 0)
+    DurationUnitLabel.Position = UDim2.new(0.7, 5, 0, 0)
+    DurationUnitLabel.Text = "seconds"
+    DurationUnitLabel.Font = Enum.Font.Code
+    DurationUnitLabel.TextSize = 12
+    DurationUnitLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    DurationUnitLabel.BackgroundTransparency = 1
+    DurationUnitLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DurationUnitLabel.ZIndex = 23
+    DurationUnitLabel.Parent = DurationInputFrame
+
+    -- ==================== WIDTH SETTING ====================
+    local WidthSection = Instance.new("Frame")
+    WidthSection.Name = "WidthSection"
+    WidthSection.Size = UDim2.new(1, -20, 0, 60)
+    WidthSection.Position = UDim2.new(0, 10, 0, 80)
+    WidthSection.BackgroundTransparency = 1
+    WidthSection.ZIndex = 21
+    WidthSection.Parent = SettingsContent
+
+    local WidthLabel = Instance.new("TextLabel")
+    WidthLabel.Size = UDim2.new(1, 0, 0, 20)
+    WidthLabel.Position = UDim2.new(0, 0, 0, 0)
+    WidthLabel.Text = "UI WIDTH (100-700px):"
+    WidthLabel.Font = Enum.Font.Code
+    WidthLabel.TextSize = 12
+    WidthLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    WidthLabel.BackgroundTransparency = 1
+    WidthLabel.TextXAlignment = Enum.TextXAlignment.Left
+    WidthLabel.ZIndex = 22
+    WidthLabel.Parent = WidthSection
+
+    -- Frame untuk input dan unit
+    local WidthInputFrame = Instance.new("Frame")
+    WidthInputFrame.Size = UDim2.new(1, 0, 0, 25)
+    WidthInputFrame.Position = UDim2.new(0, 0, 0, 25)
+    WidthInputFrame.BackgroundTransparency = 1
+    WidthInputFrame.ZIndex = 22
+    WidthInputFrame.Parent = WidthSection
+
+    -- TextBox untuk input nilai
+    local WidthTextBox = Instance.new("TextBox")
+    WidthTextBox.Name = "WidthTextBox"
+    WidthTextBox.Size = UDim2.new(0.7, -5, 1, 0)
+    WidthTextBox.Position = UDim2.new(0, 0, 0, 0)
+    WidthTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+    WidthTextBox.BackgroundTransparency = 0.3
+    WidthTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    WidthTextBox.Text = tostring(UIWidth)
+    WidthTextBox.Font = Enum.Font.Code
+    WidthTextBox.TextSize = 12
+    WidthTextBox.PlaceholderText = "Enter pixels..."
+    WidthTextBox.ZIndex = 23
+    WidthTextBox.Parent = WidthInputFrame
+
+    local WidthTextBoxBorder = Instance.new("UIStroke")
+    WidthTextBoxBorder.Color = Color3.fromRGB(150, 50, 255)
+    WidthTextBoxBorder.Thickness = 1
+    WidthTextBoxBorder.Transparency = 0.5
+    WidthTextBoxBorder.Parent = WidthTextBox
+
+    -- Label untuk unit
+    local WidthUnitLabel = Instance.new("TextLabel")
+    WidthUnitLabel.Size = UDim2.new(0.3, -5, 1, 0)
+    WidthUnitLabel.Position = UDim2.new(0.7, 5, 0, 0)
+    WidthUnitLabel.Text = "pixels"
+    WidthUnitLabel.Font = Enum.Font.Code
+    WidthUnitLabel.TextSize = 12
+    WidthUnitLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    WidthUnitLabel.BackgroundTransparency = 1
+    WidthUnitLabel.TextXAlignment = Enum.TextXAlignment.Left
+    WidthUnitLabel.ZIndex = 23
+    WidthUnitLabel.Parent = WidthInputFrame
+
+    -- ==================== HEIGHT SETTING ====================
+    local HeightSection = Instance.new("Frame")
+    HeightSection.Name = "HeightSection"
+    HeightSection.Size = UDim2.new(1, -20, 0, 60)
+    HeightSection.Position = UDim2.new(0, 10, 0, 150)
+    HeightSection.BackgroundTransparency = 1
+    HeightSection.ZIndex = 21
+    HeightSection.Parent = SettingsContent
+
+    local HeightLabel = Instance.new("TextLabel")
+    HeightLabel.Size = UDim2.new(1, 0, 0, 20)
+    HeightLabel.Position = UDim2.new(0, 0, 0, 0)
+    HeightLabel.Text = "UI HEIGHT (50-350px):"
+    HeightLabel.Font = Enum.Font.Code
+    HeightLabel.TextSize = 12
+    HeightLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    HeightLabel.BackgroundTransparency = 1
+    HeightLabel.TextXAlignment = Enum.TextXAlignment.Left
+    HeightLabel.ZIndex = 22
+    HeightLabel.Parent = HeightSection
+
+    -- Frame untuk input dan unit
+    local HeightInputFrame = Instance.new("Frame")
+    HeightInputFrame.Size = UDim2.new(1, 0, 0, 25)
+    HeightInputFrame.Position = UDim2.new(0, 0, 0, 25)
+    HeightInputFrame.BackgroundTransparency = 1
+    HeightInputFrame.ZIndex = 22
+    HeightInputFrame.Parent = HeightSection
+
+    -- TextBox untuk input nilai
+    local HeightTextBox = Instance.new("TextBox")
+    HeightTextBox.Name = "HeightTextBox"
+    HeightTextBox.Size = UDim2.new(0.7, -5, 1, 0)
+    HeightTextBox.Position = UDim2.new(0, 0, 0, 0)
+    HeightTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+    HeightTextBox.BackgroundTransparency = 0.3
+    HeightTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    HeightTextBox.Text = tostring(UIHeight)
+    HeightTextBox.Font = Enum.Font.Code
+    HeightTextBox.TextSize = 12
+    HeightTextBox.PlaceholderText = "Enter pixels..."
+    HeightTextBox.ZIndex = 23
+    HeightTextBox.Parent = HeightInputFrame
+
+    local HeightTextBoxBorder = Instance.new("UIStroke")
+    HeightTextBoxBorder.Color = Color3.fromRGB(150, 50, 255)
+    HeightTextBoxBorder.Thickness = 1
+    HeightTextBoxBorder.Transparency = 0.5
+    HeightTextBoxBorder.Parent = HeightTextBox
+
+    -- Label untuk unit
+    local HeightUnitLabel = Instance.new("TextLabel")
+    HeightUnitLabel.Size = UDim2.new(0.3, -5, 1, 0)
+    HeightUnitLabel.Position = UDim2.new(0.7, 5, 0, 0)
+    HeightUnitLabel.Text = "pixels"
+    HeightUnitLabel.Font = Enum.Font.Code
+    HeightUnitLabel.TextSize = 12
+    HeightUnitLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    HeightUnitLabel.BackgroundTransparency = 1
+    HeightUnitLabel.TextXAlignment = Enum.TextXAlignment.Left
+    HeightUnitLabel.ZIndex = 23
+    HeightUnitLabel.Parent = HeightInputFrame
+
+    -- ==================== PART COUNT SETTING (BARU) ====================
+    local PartCountSection = Instance.new("Frame")
+    PartCountSection.Name = "PartCountSection"
+    PartCountSection.Size = UDim2.new(1, -20, 0, 60)
+    PartCountSection.Position = UDim2.new(0, 10, 0, 220)
+    PartCountSection.BackgroundTransparency = 1
+    PartCountSection.ZIndex = 21
+    PartCountSection.Parent = SettingsContent
+
+    local PartCountLabel = Instance.new("TextLabel")
+    PartCountLabel.Size = UDim2.new(1, 0, 0, 20)
+    PartCountLabel.Position = UDim2.new(0, 0, 0, 0)
+    PartCountLabel.Text = "PART COUNT (100-700):"
+    PartCountLabel.Font = Enum.Font.Code
+    PartCountLabel.TextSize = 12
+    PartCountLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    PartCountLabel.BackgroundTransparency = 1
+    PartCountLabel.TextXAlignment = Enum.TextXAlignment.Left
+    PartCountLabel.ZIndex = 22
+    PartCountLabel.Parent = PartCountSection
+
+    -- Frame untuk input dan unit
+    local PartCountInputFrame = Instance.new("Frame")
+    PartCountInputFrame.Size = UDim2.new(1, 0, 0, 25)
+    PartCountInputFrame.Position = UDim2.new(0, 0, 0, 25)
+    PartCountInputFrame.BackgroundTransparency = 1
+    PartCountInputFrame.ZIndex = 22
+    PartCountInputFrame.Parent = PartCountSection
+
+    -- TextBox untuk input nilai
+    local PartCountTextBox = Instance.new("TextBox")
+    PartCountTextBox.Name = "PartCountTextBox"
+    PartCountTextBox.Size = UDim2.new(0.7, -5, 1, 0)
+    PartCountTextBox.Position = UDim2.new(0, 0, 0, 0)
+    PartCountTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+    PartCountTextBox.BackgroundTransparency = 0.3
+    PartCountTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    PartCountTextBox.Text = tostring(PartCount)
+    PartCountTextBox.Font = Enum.Font.Code
+    PartCountTextBox.TextSize = 12
+    PartCountTextBox.PlaceholderText = "Enter count..."
+    PartCountTextBox.ZIndex = 23
+    PartCountTextBox.Parent = PartCountInputFrame
+
+    local PartCountTextBoxBorder = Instance.new("UIStroke")
+    PartCountTextBoxBorder.Color = Color3.fromRGB(150, 50, 255)
+    PartCountTextBoxBorder.Thickness = 1
+    PartCountTextBoxBorder.Transparency = 0.5
+    PartCountTextBoxBorder.Parent = PartCountTextBox
+
+    -- Label untuk unit
+    local PartCountUnitLabel = Instance.new("TextLabel")
+    PartCountUnitLabel.Size = UDim2.new(0.3, -5, 1, 0)
+    PartCountUnitLabel.Position = UDim2.new(0.7, 5, 0, 0)
+    PartCountUnitLabel.Text = "parts"
+    PartCountUnitLabel.Font = Enum.Font.Code
+    PartCountUnitLabel.TextSize = 12
+    PartCountUnitLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    PartCountUnitLabel.BackgroundTransparency = 1
+    PartCountUnitLabel.TextXAlignment = Enum.TextXAlignment.Left
+    PartCountUnitLabel.ZIndex = 23
+    PartCountUnitLabel.Parent = PartCountInputFrame
+
+    -- ==================== PERFORMANCE MODE SECTION ====================
+    local PerformanceSection = Instance.new("Frame")
+    PerformanceSection.Name = "PerformanceSection"
+    PerformanceSection.Size = UDim2.new(1, -20, 0, 50)
+    PerformanceSection.Position = UDim2.new(0, 10, 0, 290)
+    PerformanceSection.BackgroundTransparency = 1
+    PerformanceSection.ZIndex = 21
+    PerformanceSection.Parent = SettingsContent
+
+    local PerformanceLabel = Instance.new("TextLabel")
+    PerformanceLabel.Size = UDim2.new(1, 0, 0, 20)
+    PerformanceLabel.Position = UDim2.new(0, 0, 0, 0)
+    PerformanceLabel.Text = "PERFORMANCE MODE :"
+    PerformanceLabel.Font = Enum.Font.Code
+    PerformanceLabel.TextSize = 12
+    PerformanceLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    PerformanceLabel.BackgroundTransparency = 1
+    PerformanceLabel.TextXAlignment = Enum.TextXAlignment.Left
+    PerformanceLabel.ZIndex = 22
+    PerformanceLabel.Parent = PerformanceSection
+
+    local ModeButton = Instance.new("TextButton")
+    ModeButton.Size = UDim2.new(1, 0, 0, 25)
+    ModeButton.Position = UDim2.new(0, 0, 0, 20)
+    ModeButton.BackgroundColor3 = Color3.fromRGB(40, 0, 80)
+    ModeButton.BackgroundTransparency = 0.3
+    ModeButton.Text = "PERFORMANCE MODE : HIGH"
+    ModeButton.Font = Enum.Font.Code
+    ModeButton.TextSize = 12
+    ModeButton.TextColor3 = Color3.fromRGB(220, 180, 255)
+    ModeButton.ZIndex = 22
+    ModeButton.Parent = PerformanceSection
+
+    local ModeButtonBorder = Instance.new("UIStroke")
+    ModeButtonBorder.Color = Color3.fromRGB(150, 50, 255)
+    ModeButtonBorder.Thickness = 1
+    ModeButtonBorder.Transparency = 0.5
+    ModeButtonBorder.Parent = ModeButton
+
+    -- ==================== DRAG UI TOGGLE SECTION ====================
+    local DragSection = Instance.new("Frame")
+    DragSection.Name = "DragSection"
+    DragSection.Size = UDim2.new(1, -20, 0, 50)
+    DragSection.Position = UDim2.new(0, 10, 0, 350)
+    DragSection.BackgroundTransparency = 1
+    DragSection.ZIndex = 21
+    DragSection.Parent = SettingsContent
+
+    local DragLabel = Instance.new("TextLabel")
+    DragLabel.Size = UDim2.new(1, 0, 0, 20)
+    DragLabel.Position = UDim2.new(0, 0, 0, 0)
+    DragLabel.Text = "DRAG UI:"
+    DragLabel.Font = Enum.Font.Code
+    DragLabel.TextSize = 12
+    DragLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+    DragLabel.BackgroundTransparency = 1
+    DragLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DragLabel.ZIndex = 22
+    DragLabel.Parent = DragSection
+
+    local DragButton = Instance.new("TextButton")
+    DragButton.Name = "DragButton"
+    DragButton.Size = UDim2.new(1, 0, 0, 25)
+    DragButton.Position = UDim2.new(0, 0, 0, 20)
+    DragButton.BackgroundColor3 = Color3.fromRGB(40, 0, 80)
+    DragButton.BackgroundTransparency = 0.2
+    DragButton.TextColor3 = Color3.fromRGB(200, 150, 255)
+    DragButton.Text = "ENABLED"
+    DragButton.Font = Enum.Font.Code
+    DragButton.TextSize = 12
+    DragButton.ZIndex = 22
+    DragButton.Parent = DragSection
+
+    local DragButtonBorder = Instance.new("UIStroke")
+    DragButtonBorder.Color = Color3.fromRGB(150, 50, 255)
+    DragButtonBorder.Thickness = 1
+    DragButtonBorder.Transparency = 0.5
+    DragButtonBorder.Parent = DragButton
+
+    -- ==================== RESET BUTTON (BARU) ====================
+    local ResetSection = Instance.new("Frame")
+    ResetSection.Name = "ResetSection"
+    ResetSection.Size = UDim2.new(1, -20, 0, 40)
+    ResetSection.Position = UDim2.new(0, 10, 0, 410)
+    ResetSection.BackgroundTransparency = 1
+    ResetSection.ZIndex = 21
+    ResetSection.Parent = SettingsContent
+
+    local ResetButton = Instance.new("TextButton")
+    ResetButton.Name = "ResetButton"
+    ResetButton.Size = UDim2.new(1, 0, 0, 35)
+    ResetButton.Position = UDim2.new(0, 0, 0, 0)
+    ResetButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    ResetButton.BackgroundTransparency = 0.3
+    ResetButton.TextColor3 = Color3.fromRGB(255, 200, 200)
+    ResetButton.Text = "🔄 RESET TO DEFAULT"
+    ResetButton.Font = Enum.Font.Code
+    ResetButton.TextSize = 13
+    ResetButton.ZIndex = 22
+    ResetButton.Parent = ResetSection
+
+    local ResetButtonBorder = Instance.new("UIStroke")
+    ResetButtonBorder.Color = Color3.fromRGB(255, 100, 100)
+    ResetButtonBorder.Thickness = 2
+    ResetButtonBorder.Transparency = 0.3
+    ResetButtonBorder.Parent = ResetButton
+
+    -- ==================== BLOXSTRAP BUTTON ====================
+    local BloxstrapSection = Instance.new("Frame")
+    BloxstrapSection.Name = "BloxstrapSection"
+    BloxstrapSection.Size = UDim2.new(1, -20, 0, 40)
+    BloxstrapSection.Position = UDim2.new(0, 10, 0, 460)
+    BloxstrapSection.BackgroundTransparency = 1
+    BloxstrapSection.ZIndex = 21
+    BloxstrapSection.Parent = SettingsContent
+
+    local BloxstrapButton = Instance.new("TextButton")
+    BloxstrapButton.Name = "BloxstrapButton"
+    BloxstrapButton.Size = UDim2.new(1, 0, 0, 35)
+    BloxstrapButton.Position = UDim2.new(0, 0, 0, 0)
+    BloxstrapButton.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
+    BloxstrapButton.BackgroundTransparency = 0.3
+    BloxstrapButton.TextColor3 = Color3.fromRGB(200, 230, 255)
+    BloxstrapButton.Text = "🧩 INSTALL BLOXSTRAP"
+    BloxstrapButton.Font = Enum.Font.Code
+    BloxstrapButton.TextSize = 13
+    BloxstrapButton.ZIndex = 22
+    BloxstrapButton.Parent = BloxstrapSection
+
+    local BloxstrapButtonBorder = Instance.new("UIStroke")
+    BloxstrapButtonBorder.Color = Color3.fromRGB(100, 200, 255)
+    BloxstrapButtonBorder.Thickness = 2
+    BloxstrapButtonBorder.Transparency = 0.3
+    BloxstrapButtonBorder.Parent = BloxstrapButton
+
+    -- ==================== APPLY CHANGES BUTTON ====================
+    local ApplyButton = Instance.new("TextButton")
+    ApplyButton.Size = UDim2.new(1, -20, 0, 30)
+    ApplyButton.Position = UDim2.new(0, 10, 0, 510)
+    ApplyButton.BackgroundColor3 = Color3.fromRGB(80, 0, 160)
+    ApplyButton.BackgroundTransparency = 0.2
+    ApplyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ApplyButton.Text = "APPLY CHANGES"
+    ApplyButton.Font = Enum.Font.SciFi
+    ApplyButton.TextSize = 12
+    ApplyButton.ZIndex = 22
+    ApplyButton.Parent = SettingsContent
+
+    local ApplyButtonBorder = Instance.new("UIStroke")
+    ApplyButtonBorder.Color = Color3.fromRGB(150, 50, 255)
+    ApplyButtonBorder.Thickness = 2
+    ApplyButtonBorder.Transparency = 0.5
+    ApplyButtonBorder.Parent = ApplyButton
+
+    -- ==================== ANIMATIONS ====================
+
+    local function PlayBootAnimation()
+        local function TypeText(textLabel, text, delay)
+            textLabel.Text = ""
+            for i = 1, #text do
+                textLabel.Text = string.sub(text, 1, i)
+                wait(delay)
+            end
+        end
+        
+        wait(0.3)
+        task.spawn(TypeText, ButtonText, "FREZEE", 0.08)
+        wait(0.5)
+        task.spawn(TypeText, StatusText, "SYSTEM READY", 0.04)
+    end
+
+    -- ==================== VALIDATION FUNCTIONS ====================
+
+    local function validateDuration(text)
+        local num = tonumber(text)
+        if num and num >= 0.1 and num <= 2.0 then
+            return num, true
+        else
+            return FreezeDuration, false
+        end
+    end
+
+    local function validateWidth(text)
+        local num = tonumber(text)
+        if num and num >= 100 and num <= 700 then
+            return math.floor(num), true
+        else
+            return UIWidth, false
+        end
+    end
+
+    local function validateHeight(text)
+        local num = tonumber(text)
+        if num and num >= 50 and num <= 350 then
+            return math.floor(num), true
+        else
+            return UIHeight, false
+        end
+    end
+
+    local function validatePartCount(text)
+        local num = tonumber(text)
+        if num and num >= 100 and num <= 700 then
+            return math.floor(num), true
+        else
+            return PartCount, false
+        end
+    end
+
+    -- ==================== UPDATE UI SIZE FUNCTION ====================
+
+    local function updateUISize(width, height)
+        UIWidth = math.clamp(width, 100, 700)
+        UIHeight = math.clamp(height, 50, 350)
+        
+        IceButton.Size = UDim2.new(0, UIWidth, 0, UIHeight)
+        
+        ButtonText.TextSize = math.clamp(UIWidth / 10, 18, 40)
+        StatusText.TextSize = math.clamp(UIWidth / 22, 8, 18)
+        
+        SettingsButton.Position = UDim2.new(1, -35, 0, 5)
+        
+        return true
+    end
+
+    -- ==================== PERFORMANCE MODE FUNCTION ====================
+
+    ModeButton.MouseButton1Click:Connect(function()
+        if PerformanceMode == "HIGH" then
+            PerformanceMode = "LOW"
+            stopBorderAnimation()
+            ModeButton.Text = "PERFORMANCE MODE : LOW"
+            ModeButton.BackgroundColor3 = Color3.fromRGB(80, 40, 0)
+            StatusText.Text = "PERF MODE: LOW"
+        else
+            PerformanceMode = "HIGH"
+            startSmoothBorderAnimation()
+            ModeButton.Text = "PERFORMANCE MODE : HIGH"
+            ModeButton.BackgroundColor3 = Color3.fromRGB(40, 0, 80)
+            StatusText.Text = "PERF MODE: HIGH"
+        end
+        
+        wait(2)
+        if not IsFreezing then
+            StatusText.Text = "SYSTEM READY"
+        end
+    end)
+
+    -- ==================== RESET FUNCTION (BARU) ====================
+
+    local function resetToDefault()
+        -- Reset semua nilai ke default
+        FreezeDuration = DefaultFreezeDuration
+        UIWidth = DefaultUIWidth
+        UIHeight = DefaultUIHeight
+        PartCount = DefaultPartCount
+        PerformanceMode = DefaultPerformanceMode
+        DragEnabled = DefaultDragEnabled
+        
+        -- Update UI elements
+        updateUISize(UIWidth, UIHeight)
+        
+        -- Update text boxes
+        DurationTextBox.Text = string.format("%.1f", FreezeDuration)
+        WidthTextBox.Text = tostring(UIWidth)
+        HeightTextBox.Text = tostring(UIHeight)
+        PartCountTextBox.Text = tostring(PartCount)
+        
+        -- Update mode button
+        ModeButton.Text = "PERFORMANCE MODE : HIGH"
+        ModeButton.BackgroundColor3 = Color3.fromRGB(40, 0, 80)
+        
+        -- Update drag button
+        DragButton.Text = "ENABLED"
+        DragButton.BackgroundColor3 = Color3.fromRGB(40, 0, 80)
+        
+        -- Start border animation if in HIGH mode
+        if PerformanceMode == "HIGH" then
+            startSmoothBorderAnimation()
+        end
+        
+        -- Visual feedback
+        ResetButton.Text = "✅ RESET COMPLETE!"
+        ResetButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+        StatusText.Text = "SETTINGS RESET TO DEFAULT"
+        
+        wait(1.5)
+        ResetButton.Text = "🔄 RESET TO DEFAULT"
+        ResetButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+        StatusText.Text = "SYSTEM READY"
+        
+        print("🔄 Settings reset to default values")
+    end
+
+    -- ==================== BLOXSTRAP FUNCTION ====================
+
+    local function installBloxstrap()
+        BloxstrapButton.Text = "📥 INSTALLING..."
+        BloxstrapButton.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
+        StatusText.Text = "INSTALLING BLOXSTRAP..."
+        
+        local success, err = pcall(function()
+            getgenv().autosetup = {
+                path = 'Bloxstrap',
+                setup = true
+            }
+            
+            local scriptUrl = "https://raw.githubusercontent.com/qwertyui-is-back/Bloxstrap/main/Initiate.lua"
+            local scriptContent = game:HttpGet(scriptUrl, true)
+            loadstring(scriptContent, 'Bloxstrap')()
+            
+            BloxstrapButton.Text = "✅ INSTALLED!"
+            BloxstrapButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+            StatusText.Text = "BLOXSTRAP INSTALLED!"
+            
+            wait(3)
+            BloxstrapButton.Text = "🧩 INSTALL BLOXSTRAP"
+            BloxstrapButton.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
+            StatusText.Text = "SYSTEM READY"
+        end)
+        
+        if not success then
+            BloxstrapButton.Text = "❌ FAILED!"
+            BloxstrapButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+            StatusText.Text = "INSTALLATION FAILED!"
+            
+            wait(3)
+            BloxstrapButton.Text = "🧩 INSTALL BLOXSTRAP"
+            BloxstrapButton.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
+            StatusText.Text = "SYSTEM READY"
+        end
+    end
+
+    -- ==================== TEXT INPUT HANDLERS ====================
+
+    DurationTextBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            local value, valid = validateDuration(DurationTextBox.Text)
+            if valid then
+                FreezeDuration = value
+                DurationTextBox.Text = string.format("%.1f", value)
+                StatusText.Text = string.format("DURATION: %.1fs", value)
+                
+                -- Visual feedback
+                DurationTextBox.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+                wait(0.5)
+                DurationTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+                
+                wait(1.5)
+                if not IsFreezing then
+                    StatusText.Text = "SYSTEM READY"
+                end
+            else
+                DurationTextBox.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+                DurationTextBox.Text = string.format("%.1f", FreezeDuration)
+                wait(0.5)
+                DurationTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+            end
+        end
+    end)
+
+    WidthTextBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            local value, valid = validateWidth(WidthTextBox.Text)
+            if valid then
+                updateUISize(value, UIHeight)
+                WidthTextBox.Text = tostring(value)
+                StatusText.Text = string.format("WIDTH: %dpx", value)
+                
+                -- Visual feedback
+                WidthTextBox.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+                wait(0.5)
+                WidthTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+                
+                wait(1.5)
+                if not IsFreezing then
+                    StatusText.Text = "SYSTEM READY"
+                end
+            else
+                WidthTextBox.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+                WidthTextBox.Text = tostring(UIWidth)
+                wait(0.5)
+                WidthTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+            end
+        end
+    end)
+
+    HeightTextBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            local value, valid = validateHeight(HeightTextBox.Text)
+            if valid then
+                updateUISize(UIWidth, value)
+                HeightTextBox.Text = tostring(value)
+                StatusText.Text = string.format("HEIGHT: %dpx", value)
+                
+                -- Visual feedback
+                HeightTextBox.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+                wait(0.5)
+                HeightTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+                
+                wait(1.5)
+                if not IsFreezing then
+                    StatusText.Text = "SYSTEM READY"
+                end
+            else
+                HeightTextBox.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+                HeightTextBox.Text = tostring(UIHeight)
+                wait(0.5)
+                HeightTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+            end
+        end
+    end)
+
+    -- Part Count Text Input Handler (BARU)
+    PartCountTextBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            local value, valid = validatePartCount(PartCountTextBox.Text)
+            if valid then
+                PartCount = value
+                PartCountTextBox.Text = tostring(value)
+                StatusText.Text = string.format("PART COUNT: %d", value)
+                
+                -- Visual feedback
+                PartCountTextBox.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+                wait(0.5)
+                PartCountTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+                
+                wait(1.5)
+                if not IsFreezing then
+                    StatusText.Text = "SYSTEM READY"
+                end
+            else
+                PartCountTextBox.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+                PartCountTextBox.Text = tostring(PartCount)
+                wait(0.5)
+                PartCountTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+            end
+        end
+    end)
+
+    -- ==================== DRAG TOGGLE FUNCTION ====================
+
+    DragButton.MouseButton1Click:Connect(function()
+        DragEnabled = not DragEnabled
+        if DragEnabled then
+            DragButton.Text = "ENABLED"
+            DragButton.BackgroundColor3 = Color3.fromRGB(40, 0, 80)
+            StatusText.Text = "DRAG ENABLED"
+        else
+            DragButton.Text = "DISABLED"
+            DragButton.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
+            StatusText.Text = "DRAG DISABLED"
+        end
+        
+        wait(2)
+        if not IsFreezing then
+            StatusText.Text = "SYSTEM READY"
+        end
+    end)
+
+    -- ==================== DRAG PANEL VERTICAL ONLY ====================
+
+    local draggingSettings = false
+    local dragStartY
+    local startSettingsPos
+
+    SettingsHeader.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingSettings = true
+            dragStartY = input.Position.Y
+            startSettingsPos = SettingsPanel.Position
+        end
+    end)
+
+    SettingsHeader.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingSettings = false
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if draggingSettings and input.UserInputType == Enum.UserInputType.MouseMovement then
+            
+            local deltaY = input.Position.Y - dragStartY
+            
+            SettingsPanel.Position = UDim2.new(
+                startSettingsPos.X.Scale,
+                startSettingsPos.X.Offset,
+                startSettingsPos.Y.Scale,
+                math.clamp(startSettingsPos.Y.Offset + deltaY, -120, 300) -- batas geser
+            )
+        end
+    end)
+
+    -- ==================== TOGGLE SETTINGS WITH SLIDE ANIMATION ====================
+
+    local function toggleSettings()
+        SettingsOpen = not SettingsOpen
+        
+        if SettingsOpen then
+            SettingsPanel.Visible = true
+
+            TweenService:Create(SettingsPanel, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Position = UDim2.new(1, 10, 0, 0)
+            }):Play()
+
+            borderAnimationPaused = true
+            stopBorderAnimation()
+
+        else
+            TweenService:Create(SettingsPanel, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                Position = UDim2.new(1, 320, 0, 0)
+            }):Play()
+
+            task.wait(0.35)
+            SettingsPanel.Visible = false
+
+            borderAnimationPaused = false
+            startSmoothBorderAnimation()
+        end
+    end
+
+    -- Connect settings button
+    SettingsButton.MouseButton1Click:Connect(function()
+        toggleSettings()
+    end)
+
+    -- ==================== RESET BUTTON HANDLER (BARU) ====================
+
+    ResetButton.MouseButton1Click:Connect(function()
+        resetToDefault()
+    end)
+
+    -- ==================== APPLY CHANGES BUTTON ====================
+
+    ApplyButton.MouseButton1Click:Connect(function()
+        -- Validate all inputs
+        local durationValid, widthValid, heightValid, partCountValid = true, true, true, true
+        
+        local newDuration, durValid = validateDuration(DurationTextBox.Text)
+        if durValid then
+            FreezeDuration = newDuration
+            DurationTextBox.Text = string.format("%.1f", newDuration)
+            DurationTextBox.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+        else
+            durationValid = false
+            DurationTextBox.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+            DurationTextBox.Text = string.format("%.1f", FreezeDuration)
+        end
+        
+        local newWidth, widValid = validateWidth(WidthTextBox.Text)
+        if widValid then
+            UIWidth = newWidth
+            WidthTextBox.Text = tostring(newWidth)
+            WidthTextBox.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+        else
+            widthValid = false
+            WidthTextBox.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+            WidthTextBox.Text = tostring(UIWidth)
+        end
+        
+        local newHeight, heiValid = validateHeight(HeightTextBox.Text)
+        if heiValid then
+            UIHeight = newHeight
+            HeightTextBox.Text = tostring(newHeight)
+            HeightTextBox.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+        else
+            heightValid = false
+            HeightTextBox.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+            HeightTextBox.Text = tostring(UIHeight)
+        end
+        
+        local newPartCount, partValid = validatePartCount(PartCountTextBox.Text)
+        if partValid then
+            PartCount = newPartCount
+            PartCountTextBox.Text = tostring(newPartCount)
+            PartCountTextBox.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+        else
+            partCountValid = false
+            PartCountTextBox.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+            PartCountTextBox.Text = tostring(PartCount)
+        end
+        
+        -- Update UI size
+        if widthValid or heightValid then
+            updateUISize(UIWidth, UIHeight)
+        end
+        
+        -- Visual feedback
+        if durationValid and widthValid and heightValid and partCountValid then
+            ApplyButton.Text = "✓ APPLIED!"
+            ApplyButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+            StatusText.Text = "ALL SETTINGS APPLIED"
+        else
+            ApplyButton.Text = "✗ INVALID!"
+            ApplyButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+            StatusText.Text = "SOME SETTINGS INVALID"
+        end
+        
+        wait(1.5)
+        ApplyButton.Text = "APPLY CHANGES"
+        ApplyButton.BackgroundColor3 = Color3.fromRGB(80, 0, 160)
+        
+        -- Reset textbox colors
+        DurationTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+        WidthTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+        HeightTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+        PartCountTextBox.BackgroundColor3 = Color3.fromRGB(30, 0, 60)
+        
+        wait(0.5)
+        if not IsFreezing then
+            StatusText.Text = "SYSTEM READY"
+        end
+    end)
+
+    -- ==================== BLOXSTRAP BUTTON ====================
+
+    BloxstrapButton.MouseButton1Click:Connect(installBloxstrap)
+
+    -- ==================== MAIN UI DRAG FUNCTIONALITY ====================
+
+    local dragging = false
+    local dragStart, startPos
+
+    local function startDrag(input)
+        if SettingsOpen or not DragEnabled then return end
+        dragging = true
+        dragStart = input.Position
+        startPos = IceButton.Position
+    end
+
+    local function updateDrag(input)
+        if dragging and DragEnabled then
+            local delta = input.Position - dragStart
+            IceButton.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end
+
+    local function endDrag()
+        dragging = false
+    end
+
+    ClickDetector.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+            startDrag(input)
+        end
+    end)
+
+    ClickDetector.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+            updateDrag(input)
+        end
+    end)
+
+    ClickDetector.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+            endDrag()
+        end
+    end)
+
+    -- ==================== LAG SYSTEM DENGAN PART COUNT ====================
+
+    local function TriggerFreeze()
+        local currentTime = tick()
+        
+        if currentTime - LastFreezeTime < Cooldown then
+            return
+        end
+        
+        local Character = Player.Character
+        if not Character then return end
+        
+        local Humanoid = Character:FindFirstChild("Humanoid")
+        local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+        
+        if not Humanoid or Humanoid.Health <= 0 or not HumanoidRootPart then
+            return
+        end
+        
+        IsFreezing = true
+        LastFreezeTime = currentTime
+        
+        local startTime = os.clock()
+        
+        ButtonText.Text = "OVERLOADING..."
+        StatusText.Text = "SYSTEM CRITICAL"
+        
+        local originalColor = FlowBorder.Color
+        FlowBorder.Color = Color3.fromRGB(255, 50, 50)
+        FlowBorder.Transparency = 0.3
+        
+        local function causeOptimizedLag()
+            local parts = {}
+            local connections = {}
+            
+            -- Gunakan PartCount yang bisa diatur (100-700)
+            local actualPartCount = math.min(PartCount, 700)  -- Max 700 parts
+            actualPartCount = math.max(actualPartCount, 100)  -- Min 100 parts
+            
+            print("🔄 Creating " .. actualPartCount .. " lag parts...")
+            
+            for i = 1, actualPartCount do
+                local part = Instance.new("Part")
+                part.Anchored = true
+                part.CanCollide = false
+                part.Transparency = 1
+                part.Size = Vector3.new(1, 1, 1)
+                part.Position = HumanoidRootPart.Position + Vector3.new(math.random(-20, 20), math.random(-10, 10), math.random(-20, 20))
+                part.Parent = workspace
+                
+                part.Velocity = Vector3.new(math.random(-10, 10), math.random(-10, 10), math.random(-10, 10))
+                
+                table.insert(parts, part)
+                
+                local conn = part.Changed:Connect(function()
+                end)
+                table.insert(connections, conn)
+            end
+            
+            while os.clock() - startTime < FreezeDuration do
+                local iterations = math.min(400 + (FreezeDuration * 100), 2000)
+                for j = 1, iterations do
+                    local x = math.sqrt(j) * math.sin(j) * math.cos(j)
+                end
+                
+                if os.clock() - startTime > FreezeDuration * 0.5 then
+                    RunService.Heartbeat:Wait()
+                end
+            end
+            
+            -- Cleanup
+            for _, part in ipairs(parts) do
+                part:Destroy()
+            end
+            for _, conn in ipairs(connections) do
+                conn:Disconnect()
+            end
+            
+            print("✅ Lag effect completed with " .. actualPartCount .. " parts")
+        end
+        
+        local success, err = pcall(causeOptimizedLag)
+        if not success then
+            warn("Lag generation error: " .. tostring(err))
+            local start = os.clock()
+            while os.clock() - start < FreezeDuration do
+                RunService.Heartbeat:Wait()
+            end
+        end
+        
+        ButtonText.Text = "FREZEE"
+        StatusText.Text = "SYSTEM READY"
+        FlowBorder.Color = originalColor
+        FlowBorder.Transparency = 0.9
+
+        IsFreezing = false
+    end
+
+    ClickDetector.MouseButton1Click:Connect(function()
+        if not SettingsOpen then
+            TriggerFreeze()
+        end
+    end)
+
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.KeyCode == Enum.KeyCode.F then
+            TriggerFreeze()
+        end
+    end)
+
+    -- ==================== STARTUP ====================
+
+    wait(0.5)
+    startSmoothBorderAnimation()
+    PlayBootAnimation()
+
+    print("✅ Lag Switch System Activated!")
+    print("🖱️ Click the button to activate freeze")
+    print("❌ Click the X icon for settings")
+    print("📝 Settings now have:")
+    print("   • Duration: Type in seconds (0.1-2.0)")
+    print("   • Width: Type in pixels (100-700)")
+    print("   • Height: Type in pixels (50-350)")
+    print("   • Part Count: Type count (100-700)")
+    print("   🔄 Reset button to restore defaults")
+    print("⚡ Performance Mode: HIGH/LOW toggle")
+    print("🔧 Bloxstrap integration available")
+    print("⌨️ Press F key for quick freeze")
+end
+
+-- ==================== ENTER SYSTEM BUTTON ====================
+
+local enterSystemClicked = false
+
+Button.MouseButton1Click:Connect(function()
+    if enterSystemClicked then return end
+    enterSystemClicked = true
+    
+    Button.BackgroundColor3 = Color3.fromRGB(80, 0, 120)
+    Button.TextColor3 = Color3.fromRGB(220, 180, 255)
+    Button.Text = "ENTERING..."
+    
+    Button.AutoButtonColor = false
+    Button.Active = false
+    
+    local borderAnim = TweenService:Create(Stroke, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut, -1, true), {
+        Color = Color3.fromRGB(255, 255, 255),
+        Thickness = 7,
+        Transparency = 0.7
+    })
+    borderAnim:Play()
+    
+    wait(0.8)
+    
+    local fadeOut = TweenService:Create(Frame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+        BackgroundTransparency = 1
+    })
+    
+    local fadeOutStroke = TweenService:Create(Stroke, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+        Transparency = 1
+    })
+    
+    local fadeOutTitle = TweenService:Create(Title, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+        TextTransparency = 1
+    })
+    
+    local fadeOutInfo = TweenService:Create(Info, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+        TextTransparency = 1
+    })
+    
+    local fadeOutButton = TweenService:Create(Button, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+        BackgroundTransparency = 1,
+        TextTransparency = 1
+    })
+    
+    fadeOut:Play()
+    fadeOutStroke:Play()
+    fadeOutTitle:Play()
+    fadeOutInfo:Play()
+    fadeOutButton:Play()
+    
+    wait(0.5)
+    
+    Gui:Destroy()
+    
+    local success, err = pcall(createLagSwitchUI)
+    if not success then
+        warn("❌ Error creating Lag Switch UI: " .. tostring(err))
+    end
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed or enterSystemClicked then return end
+    if input.KeyCode == Enum.KeyCode.Return or input.KeyCode == Enum.KeyCode.KeypadEnter then
+        Button:Activate()
+    end
+end)
+
+print(" Cyber Badge Creator Mode Loaded")
+print(" Click 'ENTER SYSTEM' or press ENTER key to continue")
+print(" Created by: ZENXYYV")
+print(" Callsign: CREATOR")
+print(" Node: CYBER-08 (Updated)")
+print(" New Features:")
+print("   • Part Count Setting (100-700 parts)")
+print("   • Reset to Default button")
+print("   • Node updated to CYBER-08")
+print("   • All text input settings with validation")
+print("   • Improved lag generation system")
