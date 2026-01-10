@@ -1,6 +1,6 @@
 -- CYBER BADGE — CREATOR MODE
 -- Callsign diganti -> CREATOR
--- By ZENXYYV
+-- By rii
 -- Updated: Part Count Setting + Reset Feature + Node CYBER-08
 
 local Players = game:GetService("Players")
@@ -63,7 +63,7 @@ Info.TextYAlignment = Enum.TextYAlignment.Top
 Info.Font = Enum.Font.Code
 Info.TextSize = 14
 Info.TextColor3 = Color3.fromRGB(180, 240, 255)
-Info.Text = "CREATOR   ZENXYYV\nNODE      CYBER-08\nACCESS    AUTHORIZED"  -- Diubah ke CYBER-08
+Info.Text = "CREATOR   RIII     CYBER-08\nACCESS    AUTHORIZED"  -- Diubah ke CYBER-08
 Info.Parent = Frame
 
 local Button = Instance.new("TextButton")
